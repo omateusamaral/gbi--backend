@@ -5,11 +5,10 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PageTokenService } from './page-token.service';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
-import { TargetAudience } from './interfaces/survey.interface';
+import { OrderBy, TargetAudience } from './interfaces/survey.interface';
 import { seedSurvey } from './seeds/survey.seed';
 import { BadRequestException } from '@nestjs/common';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
-import { OrderBy } from './interfaces/order-by';
 
 describe('SurveyService', () => {
   let service: SurveyService;
