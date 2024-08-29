@@ -9,7 +9,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { TargetAudience } from 'src/interfaces/TargetAudience';
+import { TargetAudience } from 'src/interfaces/survey.interface';
 
 export class SurveyPatchFieldsDto {
   @ApiProperty({ type: 'string', example: 'title' })

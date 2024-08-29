@@ -8,11 +8,14 @@ import { plainToClass } from 'class-transformer';
 import { Survey } from './survey.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TargetAudience } from './interfaces/TargetAudience';
-import { OrderBy } from './interfaces/OrderBy';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import * as jsonmergepatch from 'json-merge-patch';
 import { PageTokenService } from './page-token.service';
+import {
+  OrderBy,
+  SurveyPage,
+  TargetAudience,
+} from './interfaces/survey.interface';
 
 @Injectable()
 export class SurveyService {
@@ -22,7 +25,7 @@ export class SurveyService {
     private readonly pageTokenService: PageTokenService,
   ) {}
 
-  async getSurvey(surveyId: string): Promise<Survey> {
+  private async getSurvey(surveyId: string): Promise<Survey> {
     const survey = await this.surveyRepository.findOneBy({
       surveyId,
     });
@@ -71,10 +74,7 @@ export class SurveyService {
     orderBy: OrderBy,
     pageSize: number,
     pageToken: string,
-  ): Promise<{
-    values: Survey[];
-    nextPageToken?: string;
-  }> {
+  ): Promise<SurveyPage> {
     pageSize = pageSize || 10;
     if (pageSize < 1 || pageSize > 1000) {
       throw new BadRequestException('Invalid Pagesize');
@@ -121,7 +121,7 @@ export class SurveyService {
     };
   }
 
-  public async listAllSurveysWithoutFilters() {
+  public async listAllSurveysWithoutFilters(): Promise<Survey[]> {
     return await this.surveyRepository.find();
   }
 }

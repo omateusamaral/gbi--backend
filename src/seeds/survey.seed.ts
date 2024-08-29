@@ -1,4 +1,4 @@
-import { TargetAudience } from '../interfaces/TargetAudience';
+import { TargetAudience } from '../interfaces/survey.interface';
 import { Survey } from '../survey.model';
 
 export const seedSurvey: Partial<Survey>[] = [

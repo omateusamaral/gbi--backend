@@ -5,11 +5,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PageTokenService } from './page-token.service';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
-import { TargetAudience } from './interfaces/TargetAudience';
+import { TargetAudience } from './interfaces/survey.interface';
 import { seedSurvey } from './seeds/survey.seed';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
-import { OrderBy } from './interfaces/OrderBy';
+import { OrderBy } from './interfaces/order-by';
 
 describe('SurveyService', () => {
   let service: SurveyService;
@@ -39,29 +39,6 @@ describe('SurveyService', () => {
     );
   });
 
-  describe('getSurvey', () => {
-    it('should return a survey if found', async () => {
-      //Arrange
-
-      jest
-        .spyOn(surveyRepository, 'findOneBy')
-        .mockResolvedValue(seedSurvey[0] as unknown as Survey);
-
-      //Act
-      const result = await service.getSurvey(seedSurvey[0].surveyId);
-
-      //Assert
-      expect(result).toEqual(seedSurvey[0]);
-    });
-
-    it('should throw NotFoundException if survey is not found', async () => {
-      //Arrange
-      jest.spyOn(surveyRepository, 'findOneBy').mockResolvedValue(null);
-
-      //Act && Assert
-      await expect(service.getSurvey('1')).rejects.toThrow(NotFoundException);
-    });
-  });
   describe('createSurvey', () => {
     it('should create a new survey and return it', async () => {
       //Arrange
@@ -77,7 +54,7 @@ describe('SurveyService', () => {
       } as any);
 
       jest
-        .spyOn(service, 'getSurvey')
+        .spyOn(surveyRepository, 'findOneBy')
         .mockResolvedValue({ ...seedSurvey[0], surveyId: '1' } as Survey);
 
       //Act
@@ -90,7 +67,6 @@ describe('SurveyService', () => {
         ...seedSurvey[0],
         surveyId: '1',
       });
-      expect(service.getSurvey).toHaveBeenCalledWith('1');
     });
   });
 
@@ -103,8 +79,9 @@ describe('SurveyService', () => {
       };
 
       jest
-        .spyOn(service, 'getSurvey')
+        .spyOn(surveyRepository, 'findOneBy')
         .mockResolvedValue(seedSurvey[0] as unknown as Survey);
+
       jest.spyOn(surveyRepository, 'update').mockResolvedValue(undefined);
 
       const result = await service.patchSurvey(
@@ -115,7 +92,6 @@ describe('SurveyService', () => {
         ...seedSurvey[0],
         title: 'Updated Survey',
       });
-      expect(service.getSurvey).toHaveBeenCalledWith(seedSurvey[0].surveyId);
     });
   });
   describe('listSurveys', () => {

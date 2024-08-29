@@ -19,8 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { TargetAudience } from './interfaces/TargetAudience';
-import { OrderBy } from './interfaces/OrderBy';
+import { OrderBy, TargetAudience } from './interfaces/survey.interface';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import { ExportCSVService } from './export-csv.service';
 

@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { v4 } from 'uuid';
-import { TargetAudience } from './interfaces/TargetAudience';
+import { TargetAudience } from './interfaces/survey.interface';
 
 @Entity({ name: 'survey' })
 export class Survey {
