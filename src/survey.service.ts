@@ -12,15 +12,14 @@ import { TargetAudience } from './interfaces/TargetAudience';
 import { OrderBy } from './interfaces/OrderBy';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import * as jsonmergepatch from 'json-merge-patch';
-interface PageToken {
-  contactEmail?: string;
-  surveyId?: string;
-}
+import { PageTokenService } from './page-token.service';
+
 @Injectable()
 export class SurveyService {
   constructor(
     @InjectRepository(Survey)
     private readonly surveyRepository: Repository<Survey>,
+    private readonly pageTokenService: PageTokenService,
   ) {}
 
   async getSurvey(surveyId: string): Promise<Survey> {
@@ -88,7 +87,7 @@ export class SurveyService {
       });
 
     if (pageToken) {
-      const decoded = this.decodePageToken(pageToken);
+      const decoded = this.pageTokenService.decodePageToken(pageToken);
 
       query.andWhere(
         '(survey.contactEmail > :contactEmail OR (survey.contactEmail = :contactEmail AND survey.surveyId > :surveyId))',
@@ -113,29 +112,13 @@ export class SurveyService {
 
     const nextPageToken =
       surveys.length > pageSize
-        ? this.encodePageToken(surveys[surveys.length - 2])
+        ? this.pageTokenService.encodePageToken(surveys[surveys.length - 2])
         : null;
 
     return {
       values: surveys.slice(0, pageSize),
       nextPageToken,
     };
-  }
-
-  private decodePageToken(token: string): PageToken {
-    try {
-      const a = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
-      return a;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      return {};
-    }
-  }
-
-  private encodePageToken({ contactEmail, surveyId }: PageToken): string {
-    return Buffer.from(JSON.stringify({ contactEmail, surveyId })).toString(
-      'base64',
-    );
   }
 
   public async listAllSurveysWithoutFilters() {

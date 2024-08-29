@@ -7,6 +7,7 @@ import { AppDataSource } from './data-source';
 import { Survey } from './survey.model';
 import { APP_PIPE } from '@nestjs/core';
 import { ExportToCSVService } from './export-to-csv.service';
+import { PageTokenService } from './page-token.service';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ExportToCSVService } from './export-to-csv.service';
     },
     SurveyService,
     ExportToCSVService,
+    PageTokenService,
   ],
 })
 export class SurveyModule {}
