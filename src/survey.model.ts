@@ -1,7 +1,6 @@
 import {
   Entity,
   Column,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryColumn,
@@ -9,8 +8,6 @@ import {
   Index,
 } from 'typeorm';
 import { v4 } from 'uuid';
-import { Question } from './question.model';
-import { Response } from './response.model';
 import { TargetAudience } from './interfaces/TargetAudience';
 
 @Entity({ name: 'survey' })
@@ -39,12 +36,6 @@ export class Survey {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToMany(() => Question, (question) => question.survey, { cascade: true })
-  questions: Question[];
-
-  @OneToMany(() => Response, (response) => response.survey)
-  responses: Response[];
 
   @BeforeInsert()
   setSurveyId() {
