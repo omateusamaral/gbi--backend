@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
 import { Survey } from './survey.model';
 import { APP_PIPE } from '@nestjs/core';
-import { ExportToCSVService } from './export-to-csv.service';
+import { ExportCSVService } from './export-csv.service';
 import { PageTokenService } from './page-token.service';
 
 @Module({
@@ -39,7 +39,7 @@ import { PageTokenService } from './page-token.service';
       }),
     },
     SurveyService,
-    ExportToCSVService,
+    ExportCSVService,
     PageTokenService,
   ],
 })

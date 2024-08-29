@@ -22,7 +22,7 @@ import {
 import { TargetAudience } from './interfaces/TargetAudience';
 import { OrderBy } from './interfaces/OrderBy';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
-import { ExportToCSVService } from './export-to-csv.service';
+import { ExportCSVService } from './export-csv.service';
 
 import { Response } from 'express';
 @ApiTags('survey')
@@ -30,7 +30,7 @@ import { Response } from 'express';
 export class SurveyController {
   constructor(
     private readonly surveyService: SurveyService,
-    private readonly exportCSVService: ExportToCSVService,
+    private readonly exportCSVService: ExportCSVService,
   ) {}
 
   @ApiResponse({
@@ -129,8 +129,8 @@ export class SurveyController {
   }
   @Get('download')
   async downloadCSV(@Res() res: Response) {
-    const csv = await this.exportCSVService.exportCSV();
-    res.setHeader('Content-Disposition', 'attachment; filename=data.csv');
+    const csv = await this.exportCSVService.export();
+    res.setHeader('Content-Disposition', 'attachment; filename=survey.csv');
     res.setHeader('Content-Type', 'text/csv');
     res.send(csv);
   }
