@@ -1,13 +1,19 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { toCsv } from '@iwsio/json-csv-node';
 import { DateTime } from 'luxon';
 
 @Injectable()
-export class ExportToCSVService {
+export class ExportCSVService {
+  private readonly logger = new Logger(ExportCSVService.name);
+
   constructor(private readonly surveyService: SurveyService) {}
 
-  public async exportCSV() {
+  public async export() {
     try {
       const data = await this.surveyService.listAllSurveysWithoutFilters();
       return await toCsv(data, {
@@ -53,7 +59,10 @@ export class ExportToCSVService {
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      throw new UnprocessableEntityException('Could not process to export CSV');
+      this.logger.error(`${ExportCSVService.name} - ${error}`);
+      throw new UnprocessableEntityException(
+        'Não foi possível processar o CSV',
+      );
     }
   }
 
