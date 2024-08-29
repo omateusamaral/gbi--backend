@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
@@ -21,11 +22,16 @@ import {
 import { TargetAudience } from './interfaces/TargetAudience';
 import { OrderBy } from './interfaces/OrderBy';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
+import { ExportToCSVService } from './export-to-csv.service';
 
+import { Response } from 'express';
 @ApiTags('survey')
 @Controller({ version: '1', path: '/survey' })
 export class SurveyController {
-  constructor(private readonly surveyService: SurveyService) {}
+  constructor(
+    private readonly surveyService: SurveyService,
+    private readonly exportCSVService: ExportToCSVService,
+  ) {}
 
   @ApiResponse({
     status: 201,
@@ -120,5 +126,12 @@ export class SurveyController {
     @Body() survey: SurveyPatchFieldsDto,
   ): Promise<Survey> {
     return await this.surveyService.patchSurvey(surveyId, survey);
+  }
+  @Get('download')
+  async downloadCSV(@Res() res: Response) {
+    const csv = await this.exportCSVService.exportCSV();
+    res.setHeader('Content-Disposition', 'attachment; filename=data.csv');
+    res.setHeader('Content-Type', 'text/csv');
+    res.send(csv);
   }
 }

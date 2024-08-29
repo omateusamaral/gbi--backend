@@ -125,11 +125,9 @@ export class SurveyService {
   private decodePageToken(token: string): PageToken {
     try {
       const a = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
-      console.log(a);
       return a;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log(error);
       return {};
     }
   }
@@ -138,5 +136,9 @@ export class SurveyService {
     return Buffer.from(JSON.stringify({ contactEmail, surveyId })).toString(
       'base64',
     );
+  }
+
+  public async listAllSurveysWithoutFilters() {
+    return await this.surveyRepository.find();
   }
 }

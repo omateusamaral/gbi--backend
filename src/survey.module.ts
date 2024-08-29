@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
 import { Survey } from './survey.model';
 import { APP_PIPE } from '@nestjs/core';
+import { ExportToCSVService } from './export-to-csv.service';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { APP_PIPE } from '@nestjs/core';
       }),
     },
     SurveyService,
+    ExportToCSVService,
   ],
 })
 export class SurveyModule {}
