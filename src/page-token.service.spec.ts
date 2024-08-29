@@ -3,6 +3,8 @@ import { PageTokenService } from './page-token.service';
 
 describe('PageTokenService', () => {
   let pageTokenService: PageTokenService;
+  const token =
+    'eyJjb250YWN0RW1haWwiOiJjb250YWN0ZW1haWxAZ21haWwuY29tIiwic3VydmV5SWQiOiJlNGUzOTg4MC04ZThiLTQxNWEtOTJhMy00NTgwNDEzODE0YmIifQ==';
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,9 +27,7 @@ describe('PageTokenService', () => {
       //Assert
 
       expect(response.length).toBeGreaterThan(0);
-      expect(response).toEqual(
-        'eyJjb250YWN0RW1haWwiOiJjb250YWN0ZW1haWxAZ21haWwuY29tIiwic3VydmV5SWQiOiJlNGUzOTg4MC04ZThiLTQxNWEtOTJhMy00NTgwNDEzODE0YmIifQ==',
-      );
+      expect(response).toEqual(token);
     });
   });
 
@@ -36,9 +36,7 @@ describe('PageTokenService', () => {
       //Arrange
 
       //Act
-      const response = pageTokenService.decodePageToken(
-        'eyJjb250YWN0RW1haWwiOiJjb250YWN0ZW1haWxAZ21haWwuY29tIiwic3VydmV5SWQiOiJlNGUzOTg4MC04ZThiLTQxNWEtOTJhMy00NTgwNDEzODE0YmIifQ==',
-      );
+      const response = pageTokenService.decodePageToken(token);
       //Assert
 
       expect(response).toEqual({
@@ -53,9 +51,7 @@ describe('PageTokenService', () => {
         throw 'error';
       });
       //Act
-      const response = pageTokenService.decodePageToken(
-        'eyJjb250YWN0RW1haWwiOiJjb250YWN0ZW1haWxAZ21haWwuY29tIiwic3VydmV5SWQiOiJlNGUzOTg4MC04ZThiLTQxNWEtOTJhMy00NTgwNDEzODE0YmIifQ==',
-      );
+      const response = pageTokenService.decodePageToken(token);
       //Assert
       expect(response).toEqual({});
       expect(response).toBeInstanceOf(Object);
