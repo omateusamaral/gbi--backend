@@ -1,9 +1,11 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { QuestionModule } from './question/question.module';
-import { ResponseModule } from './response/response.module';
-import { SurveyModule } from './survey/survey.module';
+import { QuestionModule } from './domain/question/question.module';
+import { ResponseModule } from './domain/response/response.module';
+import { SurveyModule } from './domain/survey';
+import { AppController } from './app.controller';
+import { DomainModule } from './domain/domain.module';
 
 @Module({
   imports: [
@@ -11,9 +13,10 @@ import { SurveyModule } from './survey/survey.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    SurveyModule,
     QuestionModule,
     ResponseModule,
-    SurveyModule,
+    DomainModule,
   ],
   providers: [
     {
@@ -25,5 +28,6 @@ import { SurveyModule } from './survey/survey.module';
       }),
     },
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

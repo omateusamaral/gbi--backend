@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { Survey } from './survey/survey.model';
+import { Gen1724987873699 } from '../migration/1724987873699-gen';
 import { Question } from './question/question.model';
+import { Survey } from './survey/survey.model';
 import { Response } from './response/response.model';
-import { Gen1724987873699 } from './migration/1724987873699-gen';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

@@ -22,7 +22,7 @@ export class QuestionService {
     if (await this.alreadyInserted()) {
       return;
     }
-    for (const question of this.requiredQuestions) {
+    for (const { question } of this.requiredQuestions) {
       const questionPlainToClass = plainToClass(Question, {
         question,
         surveyId,

@@ -9,8 +9,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Survey } from '../survey/survey.model';
-import { Question } from '../question/question.model';
 import { v4 } from 'uuid';
+import { Question } from '../question/question.model';
 
 @Entity()
 export class Response {
@@ -28,7 +28,7 @@ export class Response {
   @JoinColumn({
     name: 'questionId',
   })
-  question: Question;
+  questionId: Question;
 
   @Column('text')
   answer: string;
