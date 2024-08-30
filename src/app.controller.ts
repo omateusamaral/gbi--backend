@@ -20,12 +20,10 @@ import {
   ResponseService,
   Survey,
 } from './domain';
-import {
-  OrderBy,
-  TargetAudience,
-} from './domain/survey/interfaces/survey.interface';
+import { TargetAudience } from './domain/survey/interfaces/survey.interface';
 import { Response as ResponseExpress } from 'express';
 import { CSVService } from './csv/csv.service';
+import { OrderBy } from './domain/response/interfaces/response.interface';
 
 @ApiTags('survey')
 @Controller({ version: '1', path: '/surveys' })
@@ -61,14 +59,14 @@ export class AppController {
   async listResponse(
     @Query('targetAudience') targetAudience: TargetAudience,
     @Query('orderBy') orderBy: OrderBy,
-  ) {
+  ): Promise<Response[]> {
     return await this.responseService.listResponse(targetAudience, orderBy);
   }
   @Get('download')
   async downloadCSV(
     @Res() res: ResponseExpress,
     @Query('targetAudience') targetAudience: TargetAudience,
-  ) {
+  ): Promise<void> {
     const csv = await this.csvService.export(targetAudience);
     res.setHeader('Content-Disposition', 'attachment; filename=answers.csv');
     res.setHeader('Content-Type', 'text/csv');

@@ -4,11 +4,8 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { toCsv } from '@iwsio/json-csv-node';
-import { ResponseService } from 'src/domain';
-import {
-  OrderBy,
-  TargetAudience,
-} from 'src/domain/survey/interfaces/survey.interface';
+import { ResponseService, TargetAudience } from '../domain';
+import { OrderBy } from '../domain/response/interfaces/response.interface';
 
 @Injectable()
 export class CSVService {

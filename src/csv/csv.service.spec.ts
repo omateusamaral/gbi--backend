@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CSVService } from './csv.service';
-import { SurveyService } from './survey.service';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { toCsv } from '@iwsio/json-csv-node';
+import { SurveyService } from 'src/domain';
 
 jest.mock('@iwsio/json-csv-node');
 

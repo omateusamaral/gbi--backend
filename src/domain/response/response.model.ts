@@ -22,13 +22,13 @@ export class Response {
   @JoinColumn({
     name: 'surveyId',
   })
-  surveyId: Survey;
+  survey: Survey;
 
   @ManyToOne(() => Question, (question) => question)
   @JoinColumn({
     name: 'questionId',
   })
-  questionId: Question;
+  question: Question;
 
   @Column('text')
   answer: string;

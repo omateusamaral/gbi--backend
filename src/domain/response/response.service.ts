@@ -6,9 +6,8 @@ import { Repository } from 'typeorm';
 import { ResponseCreateFieldsDto } from './dtos/response-create-fields.dto';
 import { SurveyService } from '../survey';
 import { QuestionService } from '../question/question.service';
-import { OrderBy, TargetAudience } from '../survey/interfaces/survey.interface';
-import { Survey } from '../survey/survey.model';
-import { Question } from '../question/question.model';
+import { TargetAudience } from '../survey/interfaces/survey.interface';
+import { OrderBy } from './interfaces/response.interface';
 
 @Injectable()
 export class ResponseService {
@@ -38,7 +37,7 @@ export class ResponseService {
     surveyId: string,
     responseCreateFields: ResponseCreateFieldsDto,
   ): Promise<Response> {
-    const [survey, question] = await Promise.all([
+    await Promise.all([
       this.surveyService.getSurvey(surveyId),
       this.questionService.getQuestion(responseCreateFields.questionId),
     ]);
@@ -49,18 +48,14 @@ export class ResponseService {
     });
 
     const response = await this.responseRepository.insert(responsePlainToClass);
-    if (this.isRatingQuestion(question)) {
-      const surveyPlainToClass = plainToClass(Survey, {
-        starRating: survey.starRating + Number(responseCreateFields.answer),
-      });
-
-      await this.surveyService.patchSurvey(surveyId, surveyPlainToClass);
-    }
 
     return await this.getResponse(response.identifiers[0].responseId);
   }
 
-  async listResponse(targetAudience: TargetAudience, orderBy: OrderBy) {
+  async listResponse(
+    targetAudience: TargetAudience,
+    orderBy: OrderBy,
+  ): Promise<Response[]> {
     return await this.responseRepository
       .createQueryBuilder('response')
       .leftJoinAndSelect('response.questionId', 'question')
@@ -71,7 +66,13 @@ export class ResponseService {
       .getMany();
   }
 
-  private isRatingQuestion({ question }: Question): boolean {
-    return question === this.questionService.REQUIRED_QUESTIONS[0].question;
+  async countRatingForSurvey(surveyId: string): Promise<number> {
+    return await this.responseRepository.count({
+      where: {
+        survey: {
+          surveyId,
+        },
+      },
+    });
   }
 }

@@ -12,3 +12,4 @@ export * from './survey/survey.module';
 export * from './survey/survey.service';
 export * from './survey/dtos/survey-create-fields.dto';
 export * from './survey/dtos/survey-patch-fields.dto';
+export * from './survey/interfaces/survey.interface';

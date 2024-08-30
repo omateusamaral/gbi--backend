@@ -48,7 +48,7 @@ export class QuestionService {
   private async alreadyInserted(surveyId: string): Promise<boolean> {
     const response = await this.questionRepository.find({
       where: {
-        surveyId: surveyId as unknown as Survey,
+        survey: surveyId as unknown as Survey,
       },
     });
 

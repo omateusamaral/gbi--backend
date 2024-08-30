@@ -37,10 +37,10 @@ export class Survey {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Question, (question) => question.surveyId, { cascade: true })
+  @OneToMany(() => Question, (question) => question.survey, { cascade: true })
   questions: Question[];
 
-  @OneToMany(() => Response, (response) => response.surveyId)
+  @OneToMany(() => Response, (response) => response.survey)
   responses: Response[];
 
   @BeforeInsert()

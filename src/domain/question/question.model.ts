@@ -23,7 +23,7 @@ export class Question {
   @JoinColumn({
     name: 'surveyId',
   })
-  surveyId: Survey;
+  survey: Survey;
 
   @BeforeInsert()
   setQuestionId() {

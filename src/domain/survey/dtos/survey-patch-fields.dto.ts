@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -24,7 +23,7 @@ export class SurveyPatchFieldsDto {
 
   @ApiProperty({ type: 'number', example: 0 })
   @IsNumber()
-  @IsNotEmpty()
   @Min(0)
-  starRating: number;
+  @IsOptional()
+  starRating?: number;
 }

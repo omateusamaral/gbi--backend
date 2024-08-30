@@ -5,8 +5,3 @@ export enum TargetAudience {
   ATHLETES = 'Atletas',
   SPORTSMEN = 'Esportistas',
 }
-
-export enum OrderBy {
-  ASC = 'ASC',
-  DESC = 'DESC',
-}

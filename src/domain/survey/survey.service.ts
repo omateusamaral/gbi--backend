@@ -60,6 +60,6 @@ export class SurveyService {
       survey,
     );
 
-    return survey;
+    return await this.getSurvey(survey.surveyId);
   }
 }
