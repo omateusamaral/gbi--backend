@@ -38,6 +38,7 @@ export class AppController {
     @Param('surveyId') surveyId: string,
     @Body() response: ResponseCreateFieldsDto,
   ): Promise<Response> {
+    console.log(`ui`);
     return await this.responseService.createResponse(surveyId, response);
   }
 }

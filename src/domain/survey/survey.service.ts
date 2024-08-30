@@ -16,7 +16,7 @@ export class SurveyService {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  private async getSurvey(surveyId: string): Promise<Survey> {
+  public async getSurvey(surveyId: string): Promise<Survey> {
     const survey = await this.surveyRepository.findOne({
       where: {
         surveyId,

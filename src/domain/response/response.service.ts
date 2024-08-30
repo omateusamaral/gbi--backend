@@ -4,12 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { ResponseCreateFieldsDto } from './dtos/response-create-fields.dto';
+import { SurveyService } from '../survey';
+import { QuestionService } from '../question/question.service';
 
 @Injectable()
 export class ResponseService {
   constructor(
     @InjectRepository(Response)
     private readonly responseRepository: Repository<Response>,
+    private readonly surveyService: SurveyService,
+    private readonly questionService: QuestionService,
   ) {}
 
   private async getResponse(responseId: string): Promise<Response> {
@@ -31,6 +35,9 @@ export class ResponseService {
     surveyId: string,
     responseCreateFields: ResponseCreateFieldsDto,
   ): Promise<Response> {
+    await this.surveyService.getSurvey(surveyId);
+    await this.questionService.getQuestion(responseCreateFields.questionId);
+
     const responsePlainToClass = plainToClass(Response, {
       ...responseCreateFields,
       surveyId,
