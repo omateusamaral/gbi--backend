@@ -8,7 +8,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   SurveyPatchFieldsDto,
   SurveyService,
@@ -55,6 +55,20 @@ export class AppController {
     return await this.responseService.createResponse(surveyId, response);
   }
 
+  @ApiQuery({
+    name: 'targetAudience',
+    description: 'Target audience for the surveys',
+    type: String,
+    enum: TargetAudience,
+    required: true,
+  })
+  @ApiQuery({
+    name: 'orderBy',
+    description: 'Order the surveis',
+    type: String,
+    enum: OrderBy,
+    required: true,
+  })
   @Get('responses')
   async listResponse(
     @Query('targetAudience') targetAudience: TargetAudience,
@@ -62,7 +76,15 @@ export class AppController {
   ): Promise<Response[]> {
     return await this.responseService.listResponse(targetAudience, orderBy);
   }
-  @Get('download')
+
+  @ApiQuery({
+    name: 'targetAudience',
+    description: 'Target audience for the surveys',
+    type: String,
+    enum: TargetAudience,
+    required: true,
+  })
+  @Get('responses/download')
   async downloadCSV(
     @Res() res: ResponseExpress,
     @Query('targetAudience') targetAudience: TargetAudience,

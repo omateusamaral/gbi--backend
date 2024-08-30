@@ -22,13 +22,13 @@ export class CSVService {
       return await toCsv(data, {
         fields: [
           {
-            name: 'surveyId.title',
+            name: 'survey.title',
 
             label: 'Pesquisa',
           },
 
           {
-            name: 'questionId.question',
+            name: 'question.question',
 
             label: 'Questão',
           },
@@ -39,7 +39,7 @@ export class CSVService {
             label: 'Resposta',
           },
           {
-            name: 'surveyId.starRating',
+            name: 'survey.starRating',
 
             label: 'Avaliação Final da Pesquisa',
           },

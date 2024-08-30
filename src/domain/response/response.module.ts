@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ResponseService } from './response.service';
-import { DomainModule } from 'src/domain/domain.module';
+import { DomainModule } from '../domain.module';
 import { QuestionModule } from '../question/question.module';
 import { SurveyModule } from '../survey';
 

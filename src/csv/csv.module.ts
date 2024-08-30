@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CSVService } from './csv.service';
-import { ResponseModule } from 'src/domain';
+import { ResponseModule } from '../domain';
 
 @Module({
   imports: [ResponseModule],
