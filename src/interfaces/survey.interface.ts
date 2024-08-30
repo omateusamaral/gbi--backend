@@ -1,11 +1,11 @@
 import { Survey } from 'src/survey.model';
 
 export enum TargetAudience {
-  YoungAdults = 'Young Adults (18-35 years)',
-  Professionals = 'Professionals Seeking Workwear',
-  ParentsAndFamilies = 'Parents and Families',
-  FashionConsciousConsumers = 'Fashion-Conscious Consumers',
-  OccasionShoppers = 'Occasion Shoppers',
+  GEEKS = 'Geeks',
+  NERDS = 'Nerds',
+  MINIMALIST = 'Minimalista',
+  ATHLETES = 'Atletas',
+  SPORTSMEN = 'Esportistas',
 }
 
 export enum OrderBy {

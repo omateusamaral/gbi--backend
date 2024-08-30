@@ -45,7 +45,7 @@ describe('SurveyService', () => {
         title: 'New Survey',
         starRating: 4,
         contactEmail: 'test@example.com',
-        targetAudience: TargetAudience.YoungAdults,
+        targetAudience: TargetAudience.ATHLETES,
       };
 
       jest.spyOn(surveyRepository, 'insert').mockResolvedValue({
@@ -96,7 +96,7 @@ describe('SurveyService', () => {
   describe('listSurveys', () => {
     it('should return a paginated list of surveys', async () => {
       //Arrange
-      const targetAudience = TargetAudience.FashionConsciousConsumers;
+      const targetAudience = TargetAudience.ATHLETES;
       const starRating = 4;
       const orderBy = OrderBy.ASC;
       const pageSize = 2;
@@ -132,13 +132,7 @@ describe('SurveyService', () => {
 
     it('should throw BadRequestException if pageSize is invalid', async () => {
       await expect(
-        service.listSurveys(
-          TargetAudience.OccasionShoppers,
-          4,
-          OrderBy.ASC,
-          -1,
-          '',
-        ),
+        service.listSurveys(TargetAudience.ATHLETES, 4, OrderBy.ASC, -1, ''),
       ).rejects.toThrow(BadRequestException);
     });
   });

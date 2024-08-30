@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
 import { plainToClass } from 'class-transformer';
 import { Survey } from './survey.model';
@@ -11,11 +7,6 @@ import { Repository } from 'typeorm';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import * as jsonmergepatch from 'json-merge-patch';
 import { PageTokenService } from './page-token.service';
-import {
-  OrderBy,
-  SurveyPage,
-  TargetAudience,
-} from './interfaces/survey.interface';
 
 @Injectable()
 export class SurveyService {
@@ -66,59 +57,6 @@ export class SurveyService {
     );
 
     return survey;
-  }
-
-  async listSurveys(
-    targetAudience: TargetAudience,
-    starRating: number,
-    orderBy: OrderBy,
-    pageSize: number,
-    pageToken: string,
-  ): Promise<SurveyPage> {
-    pageSize = pageSize || 10;
-    if (pageSize < 1 || pageSize > 1000) {
-      throw new BadRequestException('Invalid Pagesize');
-    }
-
-    const query = this.surveyRepository
-      .createQueryBuilder('survey')
-      .where('survey.targetAudience = :targetAudience', {
-        targetAudience,
-      });
-
-    if (pageToken) {
-      const decoded = this.pageTokenService.decodePageToken(pageToken);
-
-      query.andWhere(
-        '(survey.contactEmail > :contactEmail OR (survey.contactEmail = :contactEmail AND survey.surveyId > :surveyId))',
-        {
-          surveyId: decoded.surveyId,
-          contactEmail: decoded.contactEmail,
-        },
-      );
-    }
-
-    if (starRating) {
-      query.andWhere('(survey.starRating = :starRating)', {
-        starRating,
-      });
-    }
-
-    const surveys = await query
-      .orderBy('survey.contactEmail', orderBy)
-      .addOrderBy('survey.surveyId', orderBy)
-      .take(pageSize + 1)
-      .getMany();
-
-    const nextPageToken =
-      surveys.length > pageSize
-        ? this.pageTokenService.encodePageToken(surveys[surveys.length - 2])
-        : null;
-
-    return {
-      values: surveys.slice(0, pageSize),
-      nextPageToken,
-    };
   }
 
   public async listAllSurveysWithoutFilters(): Promise<Survey[]> {

@@ -25,12 +25,6 @@ export class Survey {
   })
   public targetAudience: TargetAudience;
 
-  @Column({ type: 'int' })
-  public starRating: number;
-
-  @Column()
-  public contactEmail: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
