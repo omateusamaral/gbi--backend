@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Survey } from '../survey/survey.model';
 import { OnEvent } from '@nestjs/event-emitter';
+import { SurveyService } from '../survey';
 
 @Injectable()
 export class QuestionService {
@@ -16,6 +17,7 @@ export class QuestionService {
   constructor(
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>,
+    private readonly surveyService: SurveyService,
   ) {}
 
   public async getQuestion(questionId: string): Promise<Question> {
@@ -33,22 +35,23 @@ export class QuestionService {
   }
   @OnEvent('survey.created')
   async createQuestion(surveyId: string): Promise<void> {
-    if (await this.alreadyInserted(surveyId)) {
+    const survey = await this.surveyService.getSurvey(surveyId);
+    if (await this.alreadyInserted(survey)) {
       return;
     }
     for (const { question } of this.REQUIRED_QUESTIONS) {
       const questionPlainToClass = plainToClass(Question, {
         question,
-        surveyId,
+        survey,
       });
       await this.questionRepository.insert(questionPlainToClass);
     }
   }
 
-  private async alreadyInserted(surveyId: string): Promise<boolean> {
+  private async alreadyInserted(survey: Survey): Promise<boolean> {
     const response = await this.questionRepository.find({
       where: {
-        survey: surveyId as unknown as Survey,
+        survey: survey,
       },
     });
 

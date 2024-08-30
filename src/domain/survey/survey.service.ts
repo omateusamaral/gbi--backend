@@ -6,14 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import * as jsonmergepatch from 'json-merge-patch';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SurveyService {
   constructor(
     @InjectRepository(Survey)
     private readonly surveyRepository: Repository<Survey>,
-    private eventEmitter: EventEmitter2,
   ) {}
 
   public async getSurvey(surveyId: string): Promise<Survey> {
@@ -33,13 +31,12 @@ export class SurveyService {
 
   async createSurvey(
     surveyCreateFields: SurveyCreateFieldsDto,
-  ): Promise<Survey> {
+  ): Promise<string> {
     const surveyPlainToClass = plainToClass(Survey, surveyCreateFields);
     surveyPlainToClass.questions = [];
 
     const survey = await this.surveyRepository.insert(surveyPlainToClass);
-    this.eventEmitter.emit('survey.created', survey.identifiers[0].surveyId);
-    return await this.getSurvey(survey.identifiers[0].surveyId);
+    return survey.identifiers[0].surveyId;
   }
 
   async patchSurvey(

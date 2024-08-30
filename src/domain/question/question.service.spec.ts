@@ -4,6 +4,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { QuestionService } from './question.service';
 import { Question } from './question.model';
+import { SurveyService } from '../survey';
 
 const mockQuestionRepository = () => ({
   findOne: jest.fn(),
@@ -22,6 +23,12 @@ describe('QuestionService', () => {
         {
           provide: getRepositoryToken(Question),
           useFactory: mockQuestionRepository,
+        },
+        {
+          provide: SurveyService,
+          useFactory: () => ({
+            getSurvey: jest.fn(),
+          }),
         },
       ],
     }).compile();
