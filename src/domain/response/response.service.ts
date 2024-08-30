@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ResponseCreateFieldsDto } from './dtos/response-create-fields.dto';
 import { SurveyService } from '../survey';
 import { QuestionService } from '../question/question.service';
+import { TargetAudience } from '../survey/interfaces/survey.interface';
 
 @Injectable()
 export class ResponseService {
@@ -46,5 +47,14 @@ export class ResponseService {
     const response = await this.responseRepository.insert(responsePlainToClass);
 
     return await this.getResponse(response.identifiers[0].responseId);
+  }
+
+  async listResponse(targetAudience: TargetAudience) {
+    return await this.responseRepository
+      .createQueryBuilder('response')
+      .innerJoinAndSelect('response.questionId', 'question')
+      .innerJoinAndSelect('response.surveyId', 'survey')
+      .where('survey.targetAudience = :targetAudience', { targetAudience })
+      .getMany();
   }
 }

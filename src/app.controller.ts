@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   SurveyPatchFieldsDto,
@@ -11,6 +19,7 @@ import {
   ResponseService,
   Survey,
 } from './domain';
+import { TargetAudience } from './domain/survey/interfaces/survey.interface';
 
 @ApiTags('survey')
 @Controller({ version: '1', path: '/surveys' })
@@ -38,7 +47,11 @@ export class AppController {
     @Param('surveyId') surveyId: string,
     @Body() response: ResponseCreateFieldsDto,
   ): Promise<Response> {
-    console.log(`ui`);
     return await this.responseService.createResponse(surveyId, response);
+  }
+
+  @Get('responses')
+  async listResponse(@Query('targetAudience') targetAudience: TargetAudience) {
+    return await this.responseService.listResponse(targetAudience);
   }
 }
