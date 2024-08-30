@@ -3,7 +3,6 @@ import {
   Logger,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { SurveyService } from './survey.service';
 import { toCsv } from '@iwsio/json-csv-node';
 import { DateTime } from 'luxon';
 
@@ -11,11 +10,11 @@ import { DateTime } from 'luxon';
 export class ExportCSVService {
   private readonly logger = new Logger(ExportCSVService.name);
 
-  constructor(private readonly surveyService: SurveyService) {}
+  constructor() {}
 
   public async export() {
     try {
-      const data = await this.surveyService.listAllSurveysWithoutFilters();
+      const data = [];
       return await toCsv(data, {
         fields: [
           {

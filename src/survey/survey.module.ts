@@ -1,20 +1,14 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SurveyController } from './survey.controller';
 import { SurveyService } from './survey.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppDataSource } from './data-source';
+import { AppDataSource } from 'src/data-source';
+import { Question } from 'src/question/question.model';
 import { Survey } from './survey.model';
-import { APP_PIPE } from '@nestjs/core';
-import { ExportCSVService } from './export-csv.service';
-import { PageTokenService } from './page-token.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
@@ -26,21 +20,9 @@ import { PageTokenService } from './page-token.service';
       },
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Survey]),
+    TypeOrmModule.forFeature([Survey, Question, Response]),
   ],
   controllers: [SurveyController],
-  providers: [
-    {
-      provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-      }),
-    },
-    SurveyService,
-    ExportCSVService,
-    PageTokenService,
-  ],
+  providers: [SurveyService],
 })
 export class SurveyModule {}

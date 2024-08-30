@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
-import { TargetAudience } from 'src/interfaces/survey.interface';
+import { TargetAudience } from '../interfaces/survey.interface';
 
 export class SurveyPatchFieldsDto {
   @ApiProperty({ type: 'string', example: 'title' })

@@ -1,4 +1,4 @@
-import { Survey } from 'src/survey.model';
+import { Survey } from 'src/survey/survey.model';
 
 export enum TargetAudience {
   GEEKS = 'Geeks',

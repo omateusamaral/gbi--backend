@@ -6,14 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 import * as jsonmergepatch from 'json-merge-patch';
-import { PageTokenService } from './page-token.service';
 
 @Injectable()
 export class SurveyService {
   constructor(
     @InjectRepository(Survey)
     private readonly surveyRepository: Repository<Survey>,
-    private readonly pageTokenService: PageTokenService,
   ) {}
 
   private async getSurvey(surveyId: string): Promise<Survey> {
@@ -57,9 +55,5 @@ export class SurveyService {
     );
 
     return survey;
-  }
-
-  public async listAllSurveysWithoutFilters(): Promise<Survey[]> {
-    return await this.surveyRepository.find();
   }
 }

@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyService } from './survey.service';
 import { Survey } from './survey.model';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PageTokenService } from './page-token.service';
+import { PageTokenService } from '../response/page-token.service';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
-import { OrderBy, TargetAudience } from './interfaces/survey.interface';
+import { TargetAudience } from './interfaces/survey.interface';
 import { seedSurvey } from './seeds/survey.seed';
-import { BadRequestException } from '@nestjs/common';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
 
 describe('SurveyService', () => {
@@ -43,8 +42,6 @@ describe('SurveyService', () => {
       //Arrange
       const surveyCreateFields: SurveyCreateFieldsDto = {
         title: 'New Survey',
-        starRating: 4,
-        contactEmail: 'test@example.com',
         targetAudience: TargetAudience.ATHLETES,
       };
 
@@ -91,66 +88,6 @@ describe('SurveyService', () => {
         ...seedSurvey[0],
         title: 'Updated Survey',
       });
-    });
-  });
-  describe('listSurveys', () => {
-    it('should return a paginated list of surveys', async () => {
-      //Arrange
-      const targetAudience = TargetAudience.ATHLETES;
-      const starRating = 4;
-      const orderBy = OrderBy.ASC;
-      const pageSize = 2;
-      const pageToken = '';
-
-      const mockSurveys = [
-        { surveyId: '1', contactEmail: 'a@example.com' },
-        { surveyId: '2', contactEmail: 'b@example.com' },
-      ] as Survey[];
-
-      jest.spyOn(surveyRepository, 'createQueryBuilder').mockReturnValue({
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        addOrderBy: jest.fn().mockReturnThis(),
-        take: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockSurveys),
-      } as unknown as SelectQueryBuilder<Survey>);
-
-      //Act
-      const result = await service.listSurveys(
-        targetAudience,
-        starRating,
-        orderBy,
-        pageSize,
-        pageToken,
-      );
-
-      //Arrange
-      expect(result.values).toEqual(mockSurveys.slice(0, pageSize));
-      expect(result.nextPageToken).toBeNull();
-    });
-
-    it('should throw BadRequestException if pageSize is invalid', async () => {
-      await expect(
-        service.listSurveys(TargetAudience.ATHLETES, 4, OrderBy.ASC, -1, ''),
-      ).rejects.toThrow(BadRequestException);
-    });
-  });
-
-  describe('listAllSurveysWithoutFilters', () => {
-    it('should return all surveys without filters', async () => {
-      //Arrange
-
-      jest
-        .spyOn(surveyRepository, 'find')
-        .mockResolvedValue(seedSurvey as unknown as Survey[]);
-
-      //Act
-      const result = await service.listAllSurveysWithoutFilters();
-
-      //Arrange
-      expect(result).toEqual(seedSurvey);
-      expect(surveyRepository.find).toHaveBeenCalledTimes(1);
     });
   });
 });
