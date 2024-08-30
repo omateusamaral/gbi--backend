@@ -34,30 +34,14 @@ export class Survey {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Question, (question) => question.survey, { cascade: true })
+  @OneToMany(() => Question, (question) => question.surveyId, { cascade: true })
   questions: Question[];
 
-  @OneToMany(() => Response, (response) => response.survey)
+  @OneToMany(() => Response, (response) => response.surveyId)
   responses: Response[];
 
   @BeforeInsert()
   setSurveyId() {
     this.surveyId = v4();
-    if (!this.questions) {
-      this.questions = [];
-    }
-
-    const requiredQuestions = [
-      { questionText: 'Público-alvo' },
-      { questionText: 'Quantidade de estrelas' },
-      { questionText: 'E-mail para contato' },
-    ];
-    this.questions.push(
-      ...requiredQuestions.map((q) => {
-        const question = new Question();
-        question.question = q.questionText;
-        return question;
-      }),
-    );
   }
 }

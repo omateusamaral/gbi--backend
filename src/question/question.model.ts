@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   Index,
   PrimaryColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Survey } from '../survey/survey.model';
 import { v4 } from 'uuid';
@@ -19,7 +20,10 @@ export class Question {
   question: string;
 
   @ManyToOne(() => Survey, (survey) => survey.questions)
-  survey: Survey;
+  @JoinColumn({
+    name: 'surveyId',
+  })
+  surveyId: Survey;
 
   @BeforeInsert()
   setQuestionId() {

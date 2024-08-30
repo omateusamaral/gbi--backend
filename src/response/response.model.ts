@@ -6,6 +6,7 @@ import {
   BeforeInsert,
   Index,
   PrimaryColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Survey } from '../survey/survey.model';
 import { Question } from '../question/question.model';
@@ -18,9 +19,15 @@ export class Response {
   responseId: string;
 
   @ManyToOne(() => Survey, (survey) => survey.responses)
-  survey: Survey;
+  @JoinColumn({
+    name: 'surveyId',
+  })
+  surveyId: Survey;
 
   @ManyToOne(() => Question, (question) => question)
+  @JoinColumn({
+    name: 'questionId',
+  })
   question: Question;
 
   @Column('text')
