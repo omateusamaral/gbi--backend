@@ -6,6 +6,7 @@ import { ResponseModule } from './domain/response/response.module';
 import { SurveyModule } from './domain/survey';
 import { AppController } from './app.controller';
 import { DomainModule } from './domain/domain.module';
+import { CsvModule } from './csv/csv.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DomainModule } from './domain/domain.module';
     QuestionModule,
     ResponseModule,
     DomainModule,
+    CsvModule,
   ],
   providers: [
     {

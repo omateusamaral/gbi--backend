@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExportCSVService } from './export-csv.service';
+import { CSVService } from './csv.service';
 import { SurveyService } from './survey.service';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { toCsv } from '@iwsio/json-csv-node';
@@ -7,13 +7,13 @@ import { toCsv } from '@iwsio/json-csv-node';
 jest.mock('@iwsio/json-csv-node');
 
 describe('ExportCSVService', () => {
-  let service: ExportCSVService;
+  let service: CSVService;
   let surveyService: SurveyService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ExportCSVService,
+        CSVService,
         {
           provide: SurveyService,
           useValue: {
@@ -23,7 +23,7 @@ describe('ExportCSVService', () => {
       ],
     }).compile();
 
-    service = module.get<ExportCSVService>(ExportCSVService);
+    service = module.get<CSVService>(CSVService);
     surveyService = module.get<SurveyService>(SurveyService);
   });
 

@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -23,6 +24,8 @@ import {
   OrderBy,
   TargetAudience,
 } from './domain/survey/interfaces/survey.interface';
+import { Response as ResponseExpress } from 'express';
+import { CSVService } from './csv/csv.service';
 
 @ApiTags('survey')
 @Controller({ version: '1', path: '/surveys' })
@@ -30,6 +33,7 @@ export class AppController {
   constructor(
     private readonly surveyService: SurveyService,
     private readonly responseService: ResponseService,
+    private readonly csvService: CSVService,
   ) {}
 
   @Post()
@@ -59,5 +63,15 @@ export class AppController {
     @Query('orderBy') orderBy: OrderBy,
   ) {
     return await this.responseService.listResponse(targetAudience, orderBy);
+  }
+  @Get('download')
+  async downloadCSV(
+    @Res() res: ResponseExpress,
+    @Query('targetAudience') targetAudience: TargetAudience,
+  ) {
+    const csv = await this.csvService.export(targetAudience);
+    res.setHeader('Content-Disposition', 'attachment; filename=answers.csv');
+    res.setHeader('Content-Type', 'text/csv');
+    res.send(csv);
   }
 }

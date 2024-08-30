@@ -63,10 +63,11 @@ export class ResponseService {
   async listResponse(targetAudience: TargetAudience, orderBy: OrderBy) {
     return await this.responseRepository
       .createQueryBuilder('response')
-      .innerJoinAndSelect('response.questionId', 'question')
-      .innerJoinAndSelect('response.surveyId', 'survey')
+      .leftJoinAndSelect('response.questionId', 'question')
+      .leftJoinAndSelect('response.surveyId', 'survey')
       .where('survey.targetAudience = :targetAudience', { targetAudience })
       .orderBy('survey.starRating', orderBy)
+      .distinct(true)
       .getMany();
   }
 
