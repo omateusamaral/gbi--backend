@@ -131,10 +131,15 @@ describe('ResponseService', () => {
 
   describe('listResponse', () => {
     it('should return a list of responses based on targetAudience and orderBy', async () => {
+      //Arrange
+
+      //Act
       const result = await service.listResponse(
         TargetAudience.GEEKS,
         OrderBy.DESC,
       );
+
+      //Assert
       expect(result).toEqual([
         {
           answer: 'answer',
