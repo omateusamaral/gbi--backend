@@ -2,16 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Question } from './question.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { OnEvent } from '@nestjs/event-emitter';
 import { plainToClass } from 'class-transformer';
+import { Survey } from '../survey/survey.model';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class QuestionService {
-  private readonly REQUIRED_QUESTIONS = [
-    { question: 'Público-alvo' },
+  public readonly REQUIRED_QUESTIONS = [
     { question: 'Quantidade de estrelas' },
+    { question: 'Público-alvo' },
     { question: 'E-mail para contato' },
-    { question: 'Avaliação' },
   ];
   constructor(
     @InjectRepository(Question)
@@ -33,7 +33,7 @@ export class QuestionService {
   }
   @OnEvent('survey.created')
   async createQuestion(surveyId: string): Promise<void> {
-    if (await this.alreadyInserted()) {
+    if (await this.alreadyInserted(surveyId)) {
       return;
     }
     for (const { question } of this.REQUIRED_QUESTIONS) {
@@ -45,8 +45,12 @@ export class QuestionService {
     }
   }
 
-  private async alreadyInserted(): Promise<boolean> {
-    const response = await this.questionRepository.find();
+  private async alreadyInserted(surveyId: string): Promise<boolean> {
+    const response = await this.questionRepository.find({
+      where: {
+        surveyId: surveyId as unknown as Survey,
+      },
+    });
 
     return this.REQUIRED_QUESTIONS.every((req) =>
       response.some((value) => value.question === req.question),

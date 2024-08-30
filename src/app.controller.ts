@@ -14,12 +14,16 @@ import {
   SurveyCreateFieldsDto,
 } from './domain/survey';
 import {
+  QuestionService,
   Response,
   ResponseCreateFieldsDto,
   ResponseService,
   Survey,
 } from './domain';
-import { TargetAudience } from './domain/survey/interfaces/survey.interface';
+import {
+  OrderBy,
+  TargetAudience,
+} from './domain/survey/interfaces/survey.interface';
 
 @ApiTags('survey')
 @Controller({ version: '1', path: '/surveys' })
@@ -27,6 +31,7 @@ export class AppController {
   constructor(
     private readonly surveyService: SurveyService,
     private readonly responseService: ResponseService,
+    private readonly questionService: QuestionService,
   ) {}
 
   @Post()
@@ -51,7 +56,10 @@ export class AppController {
   }
 
   @Get('responses')
-  async listResponse(@Query('targetAudience') targetAudience: TargetAudience) {
-    return await this.responseService.listResponse(targetAudience);
+  async listResponse(
+    @Query('targetAudience') targetAudience: TargetAudience,
+    @Query('orderBy') orderBy: OrderBy,
+  ) {
+    return await this.responseService.listResponse(targetAudience, orderBy);
   }
 }

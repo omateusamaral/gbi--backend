@@ -6,7 +6,9 @@ import { Repository } from 'typeorm';
 import { ResponseCreateFieldsDto } from './dtos/response-create-fields.dto';
 import { SurveyService } from '../survey';
 import { QuestionService } from '../question/question.service';
-import { TargetAudience } from '../survey/interfaces/survey.interface';
+import { OrderBy, TargetAudience } from '../survey/interfaces/survey.interface';
+import { Survey } from '../survey/survey.model';
+import { Question } from '../question/question.model';
 
 @Injectable()
 export class ResponseService {
@@ -36,8 +38,10 @@ export class ResponseService {
     surveyId: string,
     responseCreateFields: ResponseCreateFieldsDto,
   ): Promise<Response> {
-    await this.surveyService.getSurvey(surveyId);
-    await this.questionService.getQuestion(responseCreateFields.questionId);
+    const [survey, question] = await Promise.all([
+      this.surveyService.getSurvey(surveyId),
+      this.questionService.getQuestion(responseCreateFields.questionId),
+    ]);
 
     const responsePlainToClass = plainToClass(Response, {
       ...responseCreateFields,
@@ -45,16 +49,28 @@ export class ResponseService {
     });
 
     const response = await this.responseRepository.insert(responsePlainToClass);
+    if (this.checkIfQuestionIsRating(question)) {
+      const surveyPlainToClass = plainToClass(Survey, {
+        starRating: survey.starRating + Number(responseCreateFields.answer),
+      });
+
+      await this.surveyService.patchSurvey(surveyId, surveyPlainToClass);
+    }
 
     return await this.getResponse(response.identifiers[0].responseId);
   }
 
-  async listResponse(targetAudience: TargetAudience) {
+  async listResponse(targetAudience: TargetAudience, orderBy: OrderBy) {
     return await this.responseRepository
       .createQueryBuilder('response')
       .innerJoinAndSelect('response.questionId', 'question')
       .innerJoinAndSelect('response.surveyId', 'survey')
       .where('survey.targetAudience = :targetAudience', { targetAudience })
+      .orderBy('survey.starRating', orderBy)
       .getMany();
+  }
+
+  private checkIfQuestionIsRating({ question }: Question) {
+    return question === this.questionService.REQUIRED_QUESTIONS[0].question;
   }
 }
