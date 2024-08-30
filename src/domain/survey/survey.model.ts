@@ -23,6 +23,9 @@ export class Survey {
   @Index()
   public title: string;
 
+  @Column({ type: 'int', default: 0 })
+  starRating: number;
+
   @Column({
     enum: TargetAudience,
   })
