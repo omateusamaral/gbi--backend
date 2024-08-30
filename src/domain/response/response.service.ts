@@ -49,7 +49,7 @@ export class ResponseService {
     });
 
     const response = await this.responseRepository.insert(responsePlainToClass);
-    if (this.checkIfQuestionIsRating(question)) {
+    if (this.isRatingQuestion(question)) {
       const surveyPlainToClass = plainToClass(Survey, {
         starRating: survey.starRating + Number(responseCreateFields.answer),
       });
@@ -70,7 +70,7 @@ export class ResponseService {
       .getMany();
   }
 
-  private checkIfQuestionIsRating({ question }: Question) {
+  private isRatingQuestion({ question }: Question): boolean {
     return question === this.questionService.REQUIRED_QUESTIONS[0].question;
   }
 }

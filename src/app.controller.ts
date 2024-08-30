@@ -14,7 +14,6 @@ import {
   SurveyCreateFieldsDto,
 } from './domain/survey';
 import {
-  QuestionService,
   Response,
   ResponseCreateFieldsDto,
   ResponseService,
@@ -31,7 +30,6 @@ export class AppController {
   constructor(
     private readonly surveyService: SurveyService,
     private readonly responseService: ResponseService,
-    private readonly questionService: QuestionService,
   ) {}
 
   @Post()

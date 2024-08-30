@@ -1,5 +1,3 @@
-import { Survey } from '../survey.model';
-
 export enum TargetAudience {
   GEEKS = 'Geeks',
   NERDS = 'Nerds',
@@ -11,9 +9,4 @@ export enum TargetAudience {
 export enum OrderBy {
   ASC = 'ASC',
   DESC = 'DESC',
-}
-
-export interface SurveyPage {
-  values: Survey[];
-  nextPageToken?: string;
 }
