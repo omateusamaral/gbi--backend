@@ -7,10 +7,11 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class QuestionService {
-  private readonly requiredQuestions = [
+  private readonly REQUIRED_QUESTIONS = [
     { question: 'Público-alvo' },
     { question: 'Quantidade de estrelas' },
     { question: 'E-mail para contato' },
+    { question: 'Avaliação' },
   ];
   constructor(
     @InjectRepository(Question)
@@ -35,7 +36,7 @@ export class QuestionService {
     if (await this.alreadyInserted()) {
       return;
     }
-    for (const { question } of this.requiredQuestions) {
+    for (const { question } of this.REQUIRED_QUESTIONS) {
       const questionPlainToClass = plainToClass(Question, {
         question,
         surveyId,
@@ -47,7 +48,7 @@ export class QuestionService {
   private async alreadyInserted(): Promise<boolean> {
     const response = await this.questionRepository.find();
 
-    return this.requiredQuestions.every((req) =>
+    return this.REQUIRED_QUESTIONS.every((req) =>
       response.some((value) => value.question === req.question),
     );
   }

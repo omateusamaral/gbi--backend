@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { TargetAudience } from '../interfaces/survey.interface';
 
 export class SurveyPatchFieldsDto {
@@ -13,4 +21,10 @@ export class SurveyPatchFieldsDto {
   @IsEnum(TargetAudience)
   @IsOptional()
   targetAudience?: TargetAudience;
+
+  @ApiProperty({ type: 'number', example: 0 })
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
+  starRating: number;
 }
