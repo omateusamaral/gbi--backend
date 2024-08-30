@@ -15,6 +15,7 @@ import {
   SurveyCreateFieldsDto,
 } from './domain/survey';
 import {
+  QuestionService,
   Response,
   ResponseCreateFieldsDto,
   ResponseService,
@@ -31,12 +32,18 @@ export class AppController {
   constructor(
     private readonly surveyService: SurveyService,
     private readonly responseService: ResponseService,
+    private readonly questionService: QuestionService,
+
     private readonly csvService: CSVService,
   ) {}
 
   @Post()
   async createSurvey(@Body() survey: SurveyCreateFieldsDto): Promise<Survey> {
-    return await this.surveyService.createSurvey(survey);
+    const surveyId = await this.surveyService.createSurvey(survey);
+
+    await this.questionService.createQuestion(surveyId);
+
+    return await this.surveyService.getSurvey(surveyId);
   }
 
   @Patch(':surveyId')

@@ -6,7 +6,6 @@ import { Survey } from './survey.model';
 import { NotFoundException } from '@nestjs/common';
 import { SurveyCreateFieldsDto } from './dtos/survey-create-fields.dto';
 import { SurveyPatchFieldsDto } from './dtos/survey-patch-fields.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as jsonmergepatch from 'json-merge-patch';
 import { TargetAudience } from './interfaces/survey.interface';
 
@@ -16,14 +15,9 @@ const mockSurveyRepository = () => ({
   update: jest.fn(),
 });
 
-const mockEventEmitter = () => ({
-  emit: jest.fn(),
-});
-
 describe('SurveyService', () => {
   let service: SurveyService;
   let surveyRepository: Repository<Survey>;
-  let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,10 +27,6 @@ describe('SurveyService', () => {
           provide: getRepositoryToken(Survey),
           useFactory: mockSurveyRepository,
         },
-        {
-          provide: EventEmitter2,
-          useFactory: mockEventEmitter,
-        },
       ],
     }).compile();
 
@@ -44,7 +34,6 @@ describe('SurveyService', () => {
     surveyRepository = module.get<Repository<Survey>>(
       getRepositoryToken(Survey),
     );
-    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
   describe('getSurvey', () => {
@@ -87,14 +76,13 @@ describe('SurveyService', () => {
       const result = await service.createSurvey(createFieldsDto);
 
       //Assert
-      expect(result).toEqual(mockSurvey);
+      expect(result).toEqual('1');
       expect(surveyRepository.insert).toHaveBeenCalledWith(
         expect.objectContaining({
           title: createFieldsDto.title,
           questions: [],
         }),
       );
-      expect(eventEmitter.emit).toHaveBeenCalledWith('survey.created', '1');
     });
   });
 

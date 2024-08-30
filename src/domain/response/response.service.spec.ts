@@ -143,13 +143,13 @@ describe('ResponseService', () => {
       expect(result).toEqual([
         {
           answer: 'answer',
-          createdAt: new Date(),
+          createdAt: expect.any(Date),
           question: {
             question: 'question',
             questionId: 'questionId',
             survey: {
               questions: [],
-              createdAt: new Date(),
+              createdAt: expect.any(Date),
               starRating: 5,
               responses: [],
               surveyId: '123',
